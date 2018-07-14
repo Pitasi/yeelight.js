@@ -64,12 +64,16 @@ class Device {
       );
 
       this.socket.on('data', (data) => {
-        const response = JSON.parse(data.toString('utf8'));
-        if (response) {
-          this.socket.destroy();
-          resolve(response);
-        } else {
-          reject();
+        try {
+          const response = JSON.parse(data.toString('utf8'));
+          if (response) {
+            this.socket.destroy();
+            resolve(response);
+          } else {
+            reject('Error reading response from device.');
+          }
+        } catch (err) {
+          reject(err);
         }
       });
 
